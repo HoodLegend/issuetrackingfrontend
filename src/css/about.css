@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@200;400&display=swap");
+
+section {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  section h2 {
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #683aa4;
+    text-align: left;
+    margin-bottom: 20px;
+    margin-top:4%;
+  }
+  section p {
+    font-size: 16px;
+    font-weight: 300;
+  }
+  button {
+    max-width: 50%;
+    border-radius: 50px !important;
+  }
+
+  #hero .col {
+    justify-content: center; 
+    flex-direction: column;
+    display: flex;
+  }
+
+  #hero .img-col {
+    justify-content: flex-end; 
+    margin-top: 100px;
+  }
+
+  #hero img {
+    max-width: 130% !important;
+    width: 130%;
+  }
+
