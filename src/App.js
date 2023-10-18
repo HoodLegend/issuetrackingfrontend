@@ -1,13 +1,14 @@
 import About from "./components/About";
 import AddIssue from "./components/AddIssue";
-import NavigationMneu from "./components/NavigationMenu";
+import NavigationMenu from "./components/NavigationMenu";
+import SideBar from "./components/SideBar";
+import './css/app.css';
 
 function App() {
   return (
     <div className="App">
-      <NavigationMneu />
-      <About />
-      <AddIssue />
+      
+      <SideBar />
     </div>
   );
 }

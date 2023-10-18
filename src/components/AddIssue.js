@@ -1,8 +1,6 @@
 import { Form, Button} from 'react-bootstrap';
 import '../css/addissueform.css';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert } from 'react-bootstrap';
 
 const AddIssue = () => {
 const [name, setName] = useState('');
@@ -10,21 +8,9 @@ const [description, setDescription] = useState('');
 const [priority, setPriority] = useState('URGENT');
 const [department, setDepartment] = useState('');
 const [isPending, setIsPending] = useState(false);
-const navigate = useNavigate();
 
-function successAlert() {
-    return (
-      <>
-        {[
-          'success'
-        ].map((variant) => (
-          <Alert key={variant} variant={variant}>
-            You have Successfully adde an issue!
-          </Alert>
-        ))}
-      </>
-    );
-  }
+
+
 
 const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,7 +19,7 @@ const handleSubmit = (event) => {
 
     const issue = {name, description, priority, department};
 
-    fetch('http://localhost:8000/upload-faults' , {
+    fetch('http://localhost:8080/save-fault' , {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -41,8 +27,6 @@ const handleSubmit = (event) => {
         body: JSON.stringify(issue)
     }).then(() => {
         setIsPending(false);
-        successAlert();
-        navigate("/");
     })
 }
 
