@@ -1,23 +1,23 @@
-.time {
-    color: rgb(11, 94, 215);
-    font-size: medium;
-    font-weight: bold;
+
+ .issue-table h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.side-tab {
-    min-width: 200px;
-    margin-bottom: 50px
+.issue-table table {
+    margin-left:20%;
 }
 
-.side-tab-content {
-    min-width: 400px;
-    max-width: 1400px;
+.pushed table {
+    margin-left:20%;
 }
 
-.ml {
-    margin-right: 10px;
+.pushed h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-250);
 }
 
-.title {
-    font: bolder;
-}
+

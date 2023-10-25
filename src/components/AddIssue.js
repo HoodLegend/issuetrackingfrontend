@@ -10,8 +10,6 @@ const [department, setDepartment] = useState('');
 const [isPending, setIsPending] = useState(false);
 
 
-
-
 const handleSubmit = (event) => {
     event.preventDefault();
 

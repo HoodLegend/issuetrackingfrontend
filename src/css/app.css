@@ -45,7 +45,6 @@ font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida San
 }
 
 
-
 .row  #icon {
     flex: 30%;
     display: grid;
@@ -55,6 +54,36 @@ font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida San
 .row  #title {
     flex: 70%;
 }
+
+.sidebarList, h2 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #fff;
+    margin-left: 10px;
+    padding-top: 40px;  
+}
+
+.hamburger-icon {
+    border: 0;
+    height: 40px;
+    width: 40px;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  /* positions the icon to the right and center aligns it vertically */
+    position: absolute;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+
+
+  .hamburger-icon:hover {
+    background-color: #8fa2ec;
+
+  }
+  
 
 
 
