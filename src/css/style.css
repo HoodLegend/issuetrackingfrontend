@@ -9,6 +9,9 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i');
+
 :root {
     scroll-behavior: smooth;
   }
@@ -385,6 +388,10 @@
     padding-left: 20px;
     /* Toggle Sidebar Button */
     /* Search Bar */
+  }
+
+  .login-title {
+    text-decoration: none;
   }
   
   .header .toggle-sidebar-btn {
