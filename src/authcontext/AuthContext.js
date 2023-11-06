@@ -22,10 +22,17 @@ function AuthProvider({children}) {
         }
         storedUser = JSON.parse(storedUser)
 
+        if (!storedUser || !storedUser.padStart || !storedUser.padStart.exp) {
+          return false
+        }
+
         if (Date.now() > storedUser.padStart.exp * 1000) {
             userLogout()
             return false
         }
+
+
+        
         return true
     }
 

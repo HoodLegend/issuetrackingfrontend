@@ -8,18 +8,16 @@ export const issueApi = {
     signup
   }
   
-  function authenticate(username, password) {
-    return instance.post('/api/auth/authenticate', { username, password }, {
+  function authenticate(email, password) {
+    return instance.post('/api/auth/signin', { email, password }, {
       headers: { 'Content-type': 'application/json' }
     })
   }
   
   function signup(user) {
     return instance.post('/api/auth/signup', user, {
-      headers: { 'Content-type': 'application/json' }
+      headers: { 'Content-type': 'application/json' },
     })
-
-    
   }
 
   const instance = axios.create({
@@ -31,7 +29,7 @@ export const issueApi = {
     if (config.headers.Authorization) {
       const token = config.headers.Authorization.split(' ')[1]
       const data = parseJwt(token)
-      if (Date.now() > data.exp * 1000) {
+      if (Date.now() > data * 1000) {
         window.location.href = "/login"
       }
     }

@@ -13,6 +13,7 @@ import { Navigate } from 'react-router-dom';
 import { Alert } from 'bootstrap';
 import { issueApi } from '../misc/issueApi'
 import { useAuth } from '../authcontext/AuthContext.js';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -20,6 +21,8 @@ function Login () {
 
 
   const { userIsAuthenticated, userLogin } = useAuth();
+  const navigate = useNavigate();
+
   
 
   useEffect(() => {
@@ -29,13 +32,13 @@ function Login () {
       };
 });
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword ] = useState('');
   const [isError, setIsError] = useState(false);
 
   const handleInputChange = (e, { name, value}) => {
-    if (name === 'username') {
-      setUsername(value)
+    if (name === 'email') {
+      setEmail(value)
     } else if (name === 'password') {
       setPassword(value)
     }
@@ -45,20 +48,20 @@ function Login () {
     e.preventDefault()
     
 
-    if (!(username && password)) {
+    if (!(email && password)) {
       setIsError(true)
       return
     }
 
     try {
-      const response = await issueApi.authenticate(username, password)
+      const response = await issueApi.authenticate(email, password)
       const { accessToken } = response.data
       const data = parseJwt(accessToken)
       const authenticatedUser = { data, accessToken }
 
       userLogin(authenticatedUser)
 
-      setUsername('')
+      setEmail('')
       setPassword('')
       setIsError(false)
     } catch (error) {
@@ -68,9 +71,8 @@ function Login () {
   }
 
   if (userIsAuthenticated()) {
-    return <Navigate to={'/'} />
+    navigate("/")
   }
-
 
     return (
       <div>
@@ -102,7 +104,7 @@ function Login () {
                         <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit}>
                           <div className="col-12">
                             <label className="form-label">
-                              Username
+                              Email
                             </label>
                             <div className="input-group has-validation">
                               <span
@@ -113,16 +115,16 @@ function Login () {
                               </span>
                               <input
                                 type="text"
-                                name="username"
+                                name="email"
                                 className="form-control"
-                                id="yourUsername"
+                                id="yourEmail"
                                 required
                                 placeholder="Enter Email.."
-                                onChange={handleInputChange}
-                                value={username}
+                                onChange={(e) => handleInputChange(e , { name: "email", value: e.target.value })}
+                                value={email}
                               />
                               <div className="invalid-feedback">
-                                Please enter your username
+                                Please enter your email
                               </div>
                             </div>
                           </div>
@@ -138,7 +140,7 @@ function Login () {
                               id="yourPassword"
                               required
                               placeholder="Enter Password"
-                              onChange={handleInputChange}
+                              onChange={(e) => handleInputChange(e, {name:"password", value:e.target.value})}
                               value={password}
                             />
                             <div className="invalid-feedback">
@@ -176,9 +178,9 @@ function Login () {
                               <a href="/signup">
                                 Create an account
                               </a>
-                              {isError && <Alert />}
                             </p>
                           </div>
+                          {isError && <p className="alert alert-danger">Opps!</p>}
                         </form>
                       </div>
                     </div>

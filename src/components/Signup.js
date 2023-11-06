@@ -11,7 +11,7 @@ const Signup = () => {
     // const isLoggedIn = Auth.userIsAuthenticated()
     const { userIsAuthenticated, userLogin } = useAuth();
 
-    const [username, setUsername] = useState('')
+    const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     const [isError, setIsError] = useState(false)
@@ -19,27 +19,26 @@ const Signup = () => {
 
     const handleInputChange = (e, { name, value }) => {
 
-        if (name === 'username') {
-          setUsername(value)
+        if (name === 'name') {
+          setName(value)
         } else if (name === 'password') {
           setPassword(value)
         } else if (name === 'email') {
           setEmail(value)
         }
-
     
       }
 
       const handleSubmit = async (e) => {
         e.preventDefault()
     
-        if (!(username && password && email)) {
+        if (!(name && password && email)) {
           setIsError(true)
-          setErrorMessage('Please, inform all fields!')
+          setErrorMessage('Please, fill in all fields!')
           return
         }
     
-        const user = { username, password, email }
+        const user = { name, password, email }
     
         try {
           const response = await issueApi.signup(user)
@@ -49,7 +48,7 @@ const Signup = () => {
     
           userLogin(authenticatedUser)
     
-          setUsername('')
+          setName('')
           setPassword('')
           setEmail('')
           setIsError(false)
@@ -136,12 +135,12 @@ const Signup = () => {
                                 </span>
                                 <input
                                   type="text"
-                                  name="username"
+                                  name="name"
                                   className="form-control"
                                   id="yourUsername"
                                   required
-                                  onChange={(e) => handleInputChange(e, { name: "username", value: e.target.value })}
-                                  value={username}
+                                  onChange={(e) => handleInputChange(e, { name: "name", value: e.target.value })}
+                                  value={name}
                                 />
                                 <div className="invalid-feedback">
                                   Please choose a username.
@@ -203,7 +202,7 @@ const Signup = () => {
                                 <a href="/login">Log in</a>
                               </p>
                             </div>
-                            { isError && <Alert className="alert alert-danger"/>}
+                            { isError && '<div className="alert alert-danger">Opps!</div>'}
                           </form>
                         </div>
                       </div>
