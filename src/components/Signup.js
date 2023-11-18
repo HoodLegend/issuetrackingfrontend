@@ -1,77 +1,65 @@
-import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../authcontext/AuthContext';
-import { parseJwt, handleLogError } from '../misc/Helpers';
-import { issueApi } from '../misc/issueApi';
-import { Alert } from 'bootstrap';
+import { useState, useRef } from 'react';
+import AuthService from '../services/authservice';
+import CheckButton from "react-validation/build/button";
+import Form from "react-validation/build/form";
 
-const Signup = () => {
 
-    // const Auth = useAuth();
-    // const isLoggedIn = Auth.userIsAuthenticated()
-    const { userIsAuthenticated, userLogin } = useAuth();
-
-    const [name, setName] = useState('')
-    const [password, setPassword] = useState('')
-    const [email, setEmail] = useState('')
-    const [isError, setIsError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
-
-    const handleInputChange = (e, { name, value }) => {
-
-        if (name === 'name') {
-          setName(value)
-        } else if (name === 'password') {
-          setPassword(value)
-        } else if (name === 'email') {
-          setEmail(value)
-        }
-    
-      }
-
-      const handleSubmit = async (e) => {
-        e.preventDefault()
-    
-        if (!(name && password && email)) {
-          setIsError(true)
-          setErrorMessage('Please, fill in all fields!')
-          return
-        }
-    
-        const user = { name, password, email }
-    
-        try {
-          const response = await issueApi.signup(user)
-          const { accessToken } = response.data
-          const data = parseJwt(accessToken)
-          const authenticatedUser = { data, accessToken }
-    
-          userLogin(authenticatedUser)
-    
-          setName('')
-          setPassword('')
-          setEmail('')
-          setIsError(false)
-          setErrorMessage('')
-        } catch (error) {
-          handleLogError(error)
-          if (error.response && error.response.data) {
-            const errorData = error.response.data
-            let errorMessage = 'Invalid fields'
-            if (errorData.status === 409) {
-              errorMessage = errorData.message
-            } else if (errorData.status === 400) {
-              errorMessage = errorData.errors[0].defaultMessage
-            }
-            setIsError(true)
-            setErrorMessage(errorMessage)
+const Signup = () => {  
+  
+    const form = useRef();
+    const checkBtn = useRef();
+  
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [successful, setSuccessful] = useState(false);
+    const [message, setMessage] = useState("");
+  
+    const onChangeName = (e) => {
+      const name = e.target.value;
+      setName(name);
+    };
+  
+    const onChangeEmail = (e) => {
+      const email = e.target.value;
+      setEmail(email);
+    };
+  
+    const onChangePassword = (e) => {
+      const password = e.target.value;
+      setPassword(password);
+    };
+  
+    const handleRegister = (e) => {
+      e.preventDefault();
+  
+      setMessage("");
+      setSuccessful(false);
+  
+      form.current.validateAll();
+      console.log(form.current)
+  
+      if (checkBtn.current.context._errors.length === 0) {
+        AuthService.register(name, email, password).then(
+          (response) => {
+            setMessage(response.data.message);
+            setSuccessful(true);
+          },
+          (error) => {
+            const resMessage =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+  
+            setMessage(resMessage);
+            setSuccessful(false);
           }
-        }
+        );
       }
-    
-      if (userIsAuthenticated()) {
-        return <Navigate to="/" />;
-      }
+    };
+
 
       return (
         <>
@@ -87,7 +75,9 @@ const Signup = () => {
                           className="logo d-flex align-items-center w-auto"
                         >
                           <img src="assets/img/logo.png" alt="" />
-                          <span className="d-none d-lg-block">Turing Foods</span>
+                          <span className="d-none d-lg-block">
+                            Turing Foods
+                          </span>
                         </a>
                       </div>
 
@@ -102,108 +92,143 @@ const Signup = () => {
                             </p>
                           </div>
 
-                          <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit}>
+                          <Form
+                            className="row g-3 needs-validation"
+                            noValidate
+                            onSubmit={handleRegister}
+                          >
+                            {!successful && (
+                              <div>
+                                <div className="col-12">
+                                  <label
+                                    htmlFor="yourEmail"
+                                    className="form-label"
+                                  >
+                                    Email
+                                  </label>
+                                  <input
+                                    type="email"
+                                    className="form-control"
+                                    id="yourEmail"
+                                    name="email"
+                                    required
+                                    onChange={onChangeEmail}
+                                    value={email}
+                                  />
+                                  <div className="invalid-feedback">
+                                    Please enter a valid Email adddress!
+                                  </div>
+                                </div>
 
-                            <div className="col-12">
-                              <label htmlFor="yourEmail" className="form-label">
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                className="form-control"
-                                id="yourEmail"
-                                name='email'
-                                required
-                                onChange={(e) => handleInputChange(e, { name: "email", value: e.target.value })}
-                                value={email}
-                              />
-                              <div className="invalid-feedback">
-                                Please enter a valid Email adddress!
-                              </div>
-                            </div>
+                                <div className="col-12">
+                                  <label
+                                    htmlFor="yourUsername"
+                                    className="form-label"
+                                  >
+                                    Username
+                                  </label>
+                                  <div className="input-group has-validation">
+                                    <span
+                                      className="input-group-text"
+                                      id="inputGroupPrepend"
+                                    >
+                                      @
+                                    </span>
+                                    <input
+                                      type="text"
+                                      name="name"
+                                      className="form-control"
+                                      id="yourUsername"
+                                      required
+                                      onChange={onChangeName}
+                                      value={name}
+                                    />
+                                    <div className="invalid-feedback">
+                                      Please choose a name.
+                                    </div>
+                                  </div>
+                                </div>
 
-                            <div className="col-12">
-                              <label htmlFor="yourUsername" className="form-label">
-                                Username
-                              </label>
-                              <div className="input-group has-validation">
-                                <span
-                                  className="input-group-text"
-                                  id="inputGroupPrepend"
-                                >
-                                  @
-                                </span>
-                                <input
-                                  type="text"
-                                  name="name"
-                                  className="form-control"
-                                  id="yourUsername"
-                                  required
-                                  onChange={(e) => handleInputChange(e, { name: "name", value: e.target.value })}
-                                  value={name}
-                                />
-                                <div className="invalid-feedback">
-                                  Please choose a username.
+                                <div className="col-12">
+                                  <label
+                                    htmlFor="yourPassword"
+                                    className="form-label"
+                                  >
+                                    Password
+                                  </label>
+                                  <input
+                                    type="password"
+                                    name="password"
+                                    className="form-control"
+                                    id="yourPassword"
+                                    required
+                                    onChange={onChangePassword}
+                                    value={password}
+                                  />
+                                  <div className="invalid-feedback">
+                                    Please enter your password!
+                                  </div>
+                                </div>
+
+                                <div className="col-12">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      name="terms"
+                                      type="checkbox"
+                                      value=""
+                                      id="acceptTerms"
+                                      required
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor="acceptTerms"
+                                    >
+                                      I agree and accept the{" "}
+                                      <a href="/">terms and conditions</a>
+                                    </label>
+                                    <div className="invalid-feedback">
+                                      You must agree before submitting.
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-12">
+                                  <button
+                                    className="btn btn-primary w-100"
+                                    type="submit"
+                                  >
+                                    Create Account
+                                  </button>
+                                </div>
+                                <div className="col-12">
+                                  <p className="small mb-0">
+                                    Already have an account?{" "}
+                                    <a href="/login">Log in</a>
+                                  </p>
                                 </div>
                               </div>
-                            </div>
+                            )}
 
-                            <div className="col-12">
-                              <label htmlFor="yourPassword" className="form-label">
-                                Password
-                              </label>
-                              <input
-                                type="password"
-                                name="password"
-                                className="form-control"
-                                id="yourPassword"
-                                required
-                                onChange={(e) => handleInputChange(e, { name: "password", value: e.target.value })}
-                                value={password}
-                              />
-                              <div className="invalid-feedback">
-                                Please enter your password!
-                              </div>
-                            </div>
-
-                            <div className="col-12">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  name="terms"
-                                  type="checkbox"
-                                  value=""
-                                  id="acceptTerms"
-                                  required
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor="acceptTerms"
+                            {message && (
+                              <div className="form-group">
+                                <div
+                                  className={
+                                    successful
+                                      ? "alert alert-success"
+                                      : "alert alert-danger"
+                                  }
+                                  role="alert"
                                 >
-                                  I agree and accept the{" "}
-                                  <a href="/">terms and conditions</a>
-                                </label>
-                                <div className="invalid-feedback">
-                                  You must agree before submitting.
+                                  {message}
                                 </div>
                               </div>
-                            </div>
-                            <div className="col-12">
-                              <button
-                                className="btn btn-primary w-100"
-                                type="submit"
-                              >
-                                Create Account
-                              </button>
-                            </div>
-                            <div className="col-12">
-                              <p className="small mb-0">
-                                Already have an account?{" "}
-                                <a href="/login">Log in</a>
-                              </p>
-                            </div>
-                            { isError && '<div className="alert alert-danger">Opps!</div>'}
-                          </form>
+                            )}
+
+                            <CheckButton
+                              style={{ display: "none" }}
+                              ref={checkBtn}
+                            />
+                          </Form>
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,4 @@
 import logo from '../images/logo.jpeg';
-import { Main } from '../assets/js/main.js'
-import { useEffect, useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'quill/dist/quill.snow.css';
@@ -8,71 +6,70 @@ import 'quill/dist/quill.bubble.css';
 import 'remixicon/fonts/remixicon.css';
 import 'simple-datatables/src/css/style.css'
 import '../css/style.css';
-import { parseJwt, handleLogError } from '../misc/Helpers';
-import { Navigate } from 'react-router-dom';
-import { Alert } from 'bootstrap';
-import { issueApi } from '../misc/issueApi'
-import { useAuth } from '../authcontext/AuthContext.js';
+import { useRef, useState} from 'react'; 
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../services/authservice';
+import CheckButton from "react-validation/build/button";
+import Form from "react-validation/build/form";
 
 
 
 function Login () {
 
-
-  const { userIsAuthenticated, userLogin } = useAuth();
-  const navigate = useNavigate();
-
   
+    const navigate = useNavigate();
+  
+    const form = useRef();
+    const checkBtn = useRef();
+  
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+  
+    const onChangeEmail = (e) => {
+      const email = e.target.value;
+      setEmail(email);
+    };
+  
+    const onChangePassword = (e) => {
+      const password = e.target.value;
+      setPassword(password);
+    };
+  
+    const handleLogin = (e) => {
+      e.preventDefault();
+  
+      setMessage("");
+      setLoading(true);
+  
+      form.current.validateAll();
+  
+      if (checkBtn.current.context._errors.length === 0) {
+        AuthService.login(email, password)
+        .then(
+          () => {
+            navigate("/dashboard");
+            window.location.reload();
+          },
+          (error) => {
+            const resMessage =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+  
+            setLoading(false);
+            setMessage(resMessage);
+          }
+        );
+      
+      } else {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    Main();
-    return () => {
-        // This is an empty function since we have no specific cleanup tasks
-      };
-});
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword ] = useState('');
-  const [isError, setIsError] = useState(false);
-
-  const handleInputChange = (e, { name, value}) => {
-    if (name === 'email') {
-      setEmail(value)
-    } else if (name === 'password') {
-      setPassword(value)
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-
-    if (!(email && password)) {
-      setIsError(true)
-      return
-    }
-
-    try {
-      const response = await issueApi.authenticate(email, password)
-      const { accessToken } = response.data
-      const data = parseJwt(accessToken)
-      const authenticatedUser = { data, accessToken }
-
-      userLogin(authenticatedUser)
-
-      setEmail('')
-      setPassword('')
-      setIsError(false)
-    } catch (error) {
-      handleLogError(error)
-      setIsError(true)
-    }
-  }
-
-  if (userIsAuthenticated()) {
-    navigate("/")
-  }
 
     return (
       <div>
@@ -101,11 +98,14 @@ function Login () {
                           </h5>
                         </div>
 
-                        <form className="row g-3 needs-validation" noValidate onSubmit={handleSubmit}>
+                        <Form
+                          className="row g-3 needs-validation"
+                          noValidate
+                          onSubmit={handleLogin}
+                          ref={form}
+                        >
                           <div className="col-12">
-                            <label className="form-label">
-                              Email
-                            </label>
+                            <label className="form-label">Email</label>
                             <div className="input-group has-validation">
                               <span
                                 className="input-group-text"
@@ -114,13 +114,13 @@ function Login () {
                                 @
                               </span>
                               <input
-                                type="text"
+                                type="email"
                                 name="email"
                                 className="form-control"
                                 id="yourEmail"
                                 required
                                 placeholder="Enter Email.."
-                                onChange={(e) => handleInputChange(e , { name: "email", value: e.target.value })}
+                                onChange={onChangeEmail}
                                 value={email}
                               />
                               <div className="invalid-feedback">
@@ -130,9 +130,7 @@ function Login () {
                           </div>
 
                           <div className="col-12">
-                            <label className="form-label">
-                              Password
-                            </label>
+                            <label className="form-label">Password</label>
                             <input
                               type="password"
                               name="password"
@@ -140,7 +138,7 @@ function Login () {
                               id="yourPassword"
                               required
                               placeholder="Enter Password"
-                              onChange={(e) => handleInputChange(e, {name:"password", value:e.target.value})}
+                              onChange={onChangePassword}
                               value={password}
                             />
                             <div className="invalid-feedback">
@@ -157,31 +155,47 @@ function Login () {
                                 value="true"
                                 id="rememberMe"
                               />
-                              <label
-                                className="form-check-label"
-                              >
+                              <label className="form-check-label">
                                 Remember me
                               </label>
                             </div>
                           </div>
-                          <div className="col-12">
+                          {/* <div className="col-12">
                             <button
                               className="btn btn-primary w-100"
                               type="submit"
                             >
                               Login
                             </button>
+                          </div> */}
+
+                          <div className="form-group">
+                            <button
+                              className="btn btn-primary btn-block"
+                              disabled={loading}
+                            >
+                              {loading && (
+                                <span className="spinner-border spinner-border-sm"></span>
+                              )}
+                              <span>Login</span>
+                            </button>
                           </div>
+
                           <div className="col-12">
                             <p className="small mb-0">
                               Don't have account?{" "}
-                              <a href="/signup">
-                                Create an account
-                              </a>
+                              <a href="/signup">Create an account</a>
                             </p>
                           </div>
-                          {isError && <p className="alert alert-danger">Opps!</p>}
-                        </form>
+                          {message && (
+                            <p className="alert alert-danger">{message}</p>
+                          )}
+
+                          <CheckButton
+                            style={{ display: "none" }}
+                            ref={checkBtn}
+                          />
+                        </Form>
                       </div>
                     </div>
                   </div>
@@ -193,7 +207,7 @@ function Login () {
         {/* End #main */}
 
         <a
-          href="/"
+          href="/login"
           className="back-to-top d-flex align-items-center justify-content-center"
         >
           <i className="bi bi-arrow-up-short"></i>
