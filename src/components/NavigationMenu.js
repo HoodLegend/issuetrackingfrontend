@@ -1,7 +1,7 @@
 import '../css/navbar.css';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
-import logo from '../images/logo.jpeg';
-import about from '../images/about.jpeg';
+import logo from '../assets/images/logo.jpeg';
+import about from '../assets/images/about.jpeg';
 
 const NavigationMenu = () => {
     return (
@@ -15,7 +15,7 @@ const NavigationMenu = () => {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ms-auto">
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
-                <a href='/login'><Button className='btn btn-primary'>Sign In</Button></a>
+                <a href='/signin'><Button className='btn btn-primary'>Sign In</Button></a>
               </Nav>
             </Navbar.Collapse>
           </Container>

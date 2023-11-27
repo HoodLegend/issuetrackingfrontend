@@ -1,33 +1,19 @@
-import AuthService from "../services/authservice";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
 
-function PrivateRoute ({ children}) {
-    const currentUser = AuthService.getCurrentUser();
-    const navigate = useNavigate();
+// import { Navigate, Route } from "react-router-dom";
+
+// import useToken from "../components/useToken";
+
+// function PrivateRoute ({ Dashboard}) {
+//   const { token } = useToken(); // Get the token from your custom hook
+
+//   const isAuthenticated = !!token; // Check if a token exists (modify this check based on your logic)
+
+//   return isAuthenticated ? (
+//     <Route path=dashboard element={<Dashboard />} />
+//   ) : (
+//     <Navigate to="/signin" replace />
+//   );
+// }
     
-
-
-    return ( 
-    currentUser ? children : navigate("/login")
-      
-      
-      
-      //   <Route
-      //   {...rest}
-      //   render={(props) => {
-      //     // if the user is logged in, render the component
-      //     if (currentUser) {
-      //       return <Dashboard {...props} />;
-      //     }
-      //     // otherwise, redirect to the login page
-      //     else {
-      //       return navigate("/login");
-      //     }
-      //   }}
-      // />
-      
-      
-    );
-}
  
-export default PrivateRoute;
+// export default PrivateRoute;

@@ -1,19 +1,17 @@
 import { useState, useRef } from 'react';
-import AuthService from '../services/authservice';
 import CheckButton from "react-validation/build/button";
 import Form from "react-validation/build/form";
+import  PropTypes from 'prop-types';
 
 
-const Signup = () => {  
-  
-    const form = useRef();
-    const checkBtn = useRef();
+function Signup ({ setToken }) {  
+
   
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [successful, setSuccessful] = useState(false);
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState();
   
     const onChangeName = (e) => {
       const name = e.target.value;
@@ -30,35 +28,33 @@ const Signup = () => {
       setPassword(password);
     };
   
-    const handleRegister = (e) => {
+    async function RegisterUser (credentials) {
+      return fetch('http://localhost:8080/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+      })
+        .then(data =>{
+            if(!data.ok){
+              throw new Error("could not fetch the data from API!")
+            }
+         data.json()})
+     }
+
+
+     const handleSignup = async e => {
       e.preventDefault();
-  
-      setMessage("");
-      setSuccessful(false);
-  
-      form.current.validateAll();
-      console.log(form.current)
-  
-      if (checkBtn.current.context._errors.length === 0) {
-        AuthService.register(name, email, password).then(
-          (response) => {
-            setMessage(response.data.message);
-            setSuccessful(true);
-          },
-          (error) => {
-            const resMessage =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-  
-            setMessage(resMessage);
-            setSuccessful(false);
-          }
-        );
-      }
-    };
+      const token = await RegisterUser({
+        email,
+        password,
+        name
+      });
+      setToken(token);
+     }
+    
+    
 
 
       return (
@@ -95,7 +91,7 @@ const Signup = () => {
                           <Form
                             className="row g-3 needs-validation"
                             noValidate
-                            onSubmit={handleRegister}
+                            onSubmit={handleSignup}
                           >
                             {!successful && (
                               <div>
@@ -223,11 +219,6 @@ const Signup = () => {
                                 </div>
                               </div>
                             )}
-
-                            <CheckButton
-                              style={{ display: "none" }}
-                              ref={checkBtn}
-                            />
                           </Form>
                         </div>
                       </div>
@@ -240,5 +231,10 @@ const Signup = () => {
         </>
       );
 }
+
+Signup.propTypes = {
+  setToken: PropTypes.func.isRequired
+}
+ 
  
 export default Signup;

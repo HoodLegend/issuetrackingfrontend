@@ -1,4 +1,4 @@
-import logo from '../images/logo.jpeg';
+import logo from '../assets/images/logo.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'quill/dist/quill.snow.css';
@@ -6,26 +6,37 @@ import 'quill/dist/quill.bubble.css';
 import 'remixicon/fonts/remixicon.css';
 import 'simple-datatables/src/css/style.css'
 import '../css/style.css';
-import { useRef, useState} from 'react'; 
-import { useNavigate } from 'react-router-dom';
-import AuthService from '../services/authservice';
-import CheckButton from "react-validation/build/button";
+import { useState} from 'react'; 
 import Form from "react-validation/build/form";
+import  PropTypes from 'prop-types';
 
+function Login ({ setToken }) {
 
-
-function Login () {
-
-  
-    const navigate = useNavigate();
-  
-    const form = useRef();
-    const checkBtn = useRef();
-  
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setIsError] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
+
+    async function LoginUser (credentials) {
+      return fetch('http://localhost:8080/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+      })
+        .then(data => data.json())
+     }
+     
+     const handleLogin = async e => {
+      e.preventDefault();
+      const token = await LoginUser({
+        email,
+        password
+      });
+      setToken(token);
+     }
+    
   
     const onChangeEmail = (e) => {
       const email = e.target.value;
@@ -37,40 +48,7 @@ function Login () {
       setPassword(password);
     };
   
-    const handleLogin = (e) => {
-      e.preventDefault();
-  
-      setMessage("");
-      setLoading(true);
-  
-      form.current.validateAll();
-  
-      if (checkBtn.current.context._errors.length === 0) {
-        AuthService.login(email, password)
-        .then(
-          () => {
-            navigate("/dashboard");
-            window.location.reload();
-          },
-          (error) => {
-            const resMessage =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-  
-            setLoading(false);
-            setMessage(resMessage);
-          }
-        );
-      
-      } else {
-        setLoading(false);
-      }
-    };
-
-
+   
     return (
       <div>
         <main>
@@ -102,7 +80,7 @@ function Login () {
                           className="row g-3 needs-validation"
                           noValidate
                           onSubmit={handleLogin}
-                          ref={form}
+                        
                         >
                           <div className="col-12">
                             <label className="form-label">Email</label>
@@ -187,14 +165,14 @@ function Login () {
                               <a href="/signup">Create an account</a>
                             </p>
                           </div>
-                          {message && (
-                            <p className="alert alert-danger">{message}</p>
+                          {error && (
+                            <p className="alert alert-danger">{error}</p>
                           )}
 
-                          <CheckButton
+                          {/* <CheckButton
                             style={{ display: "none" }}
                             ref={checkBtn}
-                          />
+                          /> */}
                         </Form>
                       </div>
                     </div>
@@ -214,6 +192,10 @@ function Login () {
         </a>
       </div>
     );
+}
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
 }
  
 export default Login;

@@ -1,53 +1,46 @@
 import NavigationMenu from "./components/NavigationMenu";
 import Login from "./components/Login";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter ,Route, Routes } from "react-router-dom";
 import Signup from "./components/Signup";
 import Dashboard from './components/Dashboard';
-import { useEffect, useState } from "react";
-import AuthService from "./services/authservice";
-import EventBus from "./misc/EventBus";
-import PrivateRoute from "./misc/PrivateRoute";
+import useToken from "./components/useToken";
+import { Navigate } from "react-router-dom";
+
 
 
 function App() {
 
-  const [currentUser, setCurrentUser] = useState(undefined);
-  const [showDashBoard, setShowDashBoard] = useState(false);
+  const {token, setToken} = useToken();
 
-  useEffect(() => {
-    const user = AuthService.getCurrentUser();
+  if (!token){
+    return <Login setToken={setToken}/>
+  }
 
-    if (user) {
-      setCurrentUser(user);
-      // setShowDashBoard(user.roles.includes("CUSTOMER"));
-      // setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
-    }
+ 
 
-    EventBus.on("logout", () => {
-      logOut();
-    });
-
-    return () => {
-      EventBus.remove("logout");
-    };
-  }, []);
-
-  const logOut = () => {
-    AuthService.logout();
-    // setShowDashBoard(false);
-    // setShowAdminBoard(false);
-    setCurrentUser(undefined);
-  };
-
+  const renderProtectedContent = () => {
+    const isAuthenticated = !!token;
+    return isAuthenticated ? <Dashboard /> : <Navigate to="/signin" replace />
+  }
 
   return (
+
       <BrowserRouter>
         <div className="App">
           <Routes>
+ 
+      
           <Route path="/" exact element={<NavigationMenu />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/signin" element={<Login setToken={setToken}/>} />
+            
+            <Route path="/dashboard" 
+            element={
+              renderProtectedContent()
+            } 
+              />
+            
+           
             <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           </Routes>
         </div>
       </BrowserRouter>
