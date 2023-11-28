@@ -1,19 +1,26 @@
 
-// import { Navigate, Route } from "react-router-dom";
+import { Navigate, Outlet, Route } from "react-router-dom";
 
-// import useToken from "../components/useToken";
+import useToken from "../components/useToken";
+import Dashboard from "../components/Dashboard";
+import { Component } from "react";
+import Login from "../components/Login";
 
-// function PrivateRoute ({ Dashboard}) {
-//   const { token } = useToken(); // Get the token from your custom hook
+function PrivateRoute ({ component: Component , ...rest}) {
+  
+    const {token, setToken} = useToken();
 
-//   const isAuthenticated = !!token; // Check if a token exists (modify this check based on your logic)
+    if (!token){
+      return <Login setToken={setToken}/>
+    
+    }
 
-//   return isAuthenticated ? (
-//     <Route path=dashboard element={<Dashboard />} />
-//   ) : (
-//     <Navigate to="/signin" replace />
-//   );
-// }
+  const isAuthenticated = !!token;
+
+  return  isAuthenticated ? <Component {...rest}/> : <Navigate to="/signin" replace />
+    
+
+}
     
  
-// export default PrivateRoute;
+export default PrivateRoute;

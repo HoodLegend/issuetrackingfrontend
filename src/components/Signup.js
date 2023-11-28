@@ -2,11 +2,12 @@ import { useState, useRef } from 'react';
 import CheckButton from "react-validation/build/button";
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
+import useToken from './useToken';
 
 
 function Signup ({ setToken }) {  
+    
 
-  
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -102,6 +103,13 @@ function Signup ({ setToken }) {
                                   >
                                     Email
                                   </label>
+                                  <div className="input-group has-validation">
+                                    <span
+                                      className="input-group-text"
+                                      id="inputGroupPrepend"
+                                    >
+                                      @
+                                    </span>
                                   <input
                                     type="email"
                                     className="form-control"
@@ -114,6 +122,7 @@ function Signup ({ setToken }) {
                                   <div className="invalid-feedback">
                                     Please enter a valid Email adddress!
                                   </div>
+                                  </div>
                                 </div>
 
                                 <div className="col-12">
@@ -123,13 +132,7 @@ function Signup ({ setToken }) {
                                   >
                                     Username
                                   </label>
-                                  <div className="input-group has-validation">
-                                    <span
-                                      className="input-group-text"
-                                      id="inputGroupPrepend"
-                                    >
-                                      @
-                                    </span>
+
                                     <input
                                       type="text"
                                       name="name"
@@ -142,7 +145,6 @@ function Signup ({ setToken }) {
                                     <div className="invalid-feedback">
                                       Please choose a name.
                                     </div>
-                                  </div>
                                 </div>
 
                                 <div className="col-12">
@@ -199,7 +201,7 @@ function Signup ({ setToken }) {
                                 <div className="col-12">
                                   <p className="small mb-0">
                                     Already have an account?{" "}
-                                    <a href="/login">Log in</a>
+                                    <a href="/signin">Log in</a>
                                   </p>
                                 </div>
                               </div>

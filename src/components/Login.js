@@ -9,6 +9,7 @@ import '../css/style.css';
 import { useState} from 'react'; 
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
+import { Navigate } from 'react-router-dom';
 
 function Login ({ setToken }) {
 
@@ -30,11 +31,21 @@ function Login ({ setToken }) {
      
      const handleLogin = async e => {
       e.preventDefault();
+
+      setEmail("");
+      setPassword("");
+      try {
       const token = await LoginUser({
         email,
         password
       });
+      
       setToken(token);
+      <Navigate to={"/dashboard"} />
+    }catch (error) {
+      
+      console.log(error);
+    }
      }
     
   

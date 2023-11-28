@@ -12,6 +12,7 @@ import "tinymce/tinymce.js";
 import { useEffect } from "react";
 import { Main } from "../assets/js/main.js";
 import profile from "../assets/images/user-avatar.png";
+import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
   
@@ -40,6 +41,7 @@ const Dashboard = () => {
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
         {/* End Logo */}
+    <Outlet />
 
         <div className="search-bar">
           <form
