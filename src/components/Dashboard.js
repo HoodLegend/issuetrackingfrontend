@@ -41,7 +41,7 @@ const Dashboard = () => {
           <i className="bi bi-list toggle-sidebar-btn"></i>
         </div>
         {/* End Logo */}
-    <Outlet />
+  
 
         <div className="search-bar">
           <form

@@ -16,23 +16,10 @@ function App() {
 
   // if (!token){
   //   return <Login setToken={setToken}/>
+  
   // }
 
  
-
-  // const renderProtectedContent = ({ component: Component, ...rest }) => {
-  //   const isAuthenticated = !!token;
-  //   return (
-  //     <Route
-  //       {...rest}
-  //       render={(props) =>
-  //         isAuthenticated ? <Component {...props} /> : <Navigate to="/signin" replace />
-  //       }
-  //     />
-  //   );
-  //   // return isAuthenticated ? <Component /> : <Navigate to="/signin" replace />
-  // }
-
   return (
 <BrowserRouter>
       
@@ -41,7 +28,7 @@ function App() {
           <Routes>
             {/* public routes */}
           <Route path="/" exact element={<NavigationMenu />} />
-            <Route path="/signin" element={<Login setToken={setToken}/>} />
+            <Route path="/signin" element={<Login setToken={setToken} />} />
             <Route path="/signup" element={<Signup setToken={setToken}/>} />
 
             {/* protected Routes */}

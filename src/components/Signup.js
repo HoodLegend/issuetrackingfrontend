@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
-import CheckButton from "react-validation/build/button";
+import { useState } from 'react';
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
+import { Navigate } from 'react-router-dom';
 import useToken from './useToken';
-
 
 function Signup ({ setToken }) {  
     
@@ -13,6 +12,8 @@ function Signup ({ setToken }) {
     const [password, setPassword] = useState("");
     const [successful, setSuccessful] = useState(false);
     const [message, setMessage] = useState();
+
+    
   
     const onChangeName = (e) => {
       const name = e.target.value;
@@ -47,6 +48,11 @@ function Signup ({ setToken }) {
 
      const handleSignup = async e => {
       e.preventDefault();
+
+      setEmail("");
+      setName("");
+      setPassword("");
+
       const token = await RegisterUser({
         email,
         password,
@@ -55,9 +61,6 @@ function Signup ({ setToken }) {
       setToken(token);
      }
     
-    
-
-
       return (
         <>
           <main>

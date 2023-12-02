@@ -10,6 +10,7 @@ import { useState} from 'react';
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
+import useToken from './useToken';
 
 function Login ({ setToken }) {
 
@@ -17,6 +18,7 @@ function Login ({ setToken }) {
     const [password, setPassword] = useState("");
     const [error, setIsError] = useState(false)
     const [loading, setLoading] = useState(false);
+
 
     async function LoginUser (credentials) {
       return fetch('http://localhost:8080/api/auth/signin', {
@@ -32,21 +34,24 @@ function Login ({ setToken }) {
      const handleLogin = async e => {
       e.preventDefault();
 
-      setEmail("");
-      setPassword("");
-      try {
+      setLoading(true);
+
+
       const token = await LoginUser({
         email,
         password
       });
-      
-      setToken(token);
-      <Navigate to={"/dashboard"} />
-    }catch (error) {
-      
-      console.log(error);
-    }
+
+      setLoading(false);
+
+      if(token){
+        setToken(token);
+        return <Navigate to="/dashboard" replace />
+      }else {
+        console.error("Login failed!!")
+      }
      }
+
     
   
     const onChangeEmail = (e) => {
