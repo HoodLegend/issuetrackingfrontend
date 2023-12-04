@@ -1,25 +1,24 @@
 
-import { Navigate, Outlet, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useToken from "../hooks/useToken";
 
-import useToken from "../components/useToken";
-import Dashboard from "../components/Dashboard";
-import { Component } from "react";
-import Login from "../components/Login";
 
 function PrivateRoute ({ component: Component , ...rest}) {
-  
-    const {token, setToken} = useToken();
-    const isAuthenticated = !!token;
 
-    if (!token){
-      return <Login setToken={setToken}/>
-    
-    }
+  const navigate = useNavigate();
 
-  
+  const {token} = useToken();
+  const isAuthenticated = !!token;
 
-  return  isAuthenticated ? <Component {...rest}/> : <Navigate to="/signin" replace />
-    
+    useEffect(() => {
+      // checks if the user is Authenticated 
+      // if not redirects them to the login page. 
+      if (!isAuthenticated){
+        return navigate("/signin")
+      }
+    })
+  return  <Component {...rest}/> 
 
 }
     

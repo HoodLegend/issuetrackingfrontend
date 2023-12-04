@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
-import { Navigate } from 'react-router-dom';
-import useToken from './useToken';
+import { useNavigate } from 'react-router-dom';
+import useToken from '../hooks/useToken';
 
 function Signup ({ setToken }) {  
     
@@ -11,7 +11,9 @@ function Signup ({ setToken }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [successful, setSuccessful] = useState(false);
-    const [message, setMessage] = useState();
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     
   
@@ -29,7 +31,8 @@ function Signup ({ setToken }) {
       const password = e.target.value;
       setPassword(password);
     };
-  
+
+    // function to call the api that handles the signing up of a user.
     async function RegisterUser (credentials) {
       return fetch('http://localhost:8080/api/auth/signup', {
         method: 'POST',
@@ -42,7 +45,8 @@ function Signup ({ setToken }) {
             if(!data.ok){
               throw new Error("could not fetch the data from API!")
             }
-         data.json()})
+            return data.json();
+        })
      }
 
 
@@ -52,13 +56,32 @@ function Signup ({ setToken }) {
       setEmail("");
       setName("");
       setPassword("");
+      setSuccessful(false);
+      setLoading(true);
+      setError(false);
+     
+      
+      
 
+      try {
       const token = await RegisterUser({
         email,
         password,
         name
       });
+
+      setLoading(false);
       setToken(token);
+      setSuccessful(true);
+      return navigate("/signin");
+      
+      
+
+    }catch (error){
+      setSuccessful(false)
+      setError(true)
+      console.error(error)
+    }
      }
     
       return (
@@ -71,10 +94,9 @@ function Signup ({ setToken }) {
                     <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
                       <div className="d-flex justify-content-center py-4">
                         <a
-                          href="index.html"
+                          href="/"
                           className="logo d-flex align-items-center w-auto"
                         >
-                          <img src="assets/img/logo.png" alt="" />
                           <span className="d-none d-lg-block">
                             Turing Foods
                           </span>
@@ -113,18 +135,18 @@ function Signup ({ setToken }) {
                                     >
                                       @
                                     </span>
-                                  <input
-                                    type="email"
-                                    className="form-control"
-                                    id="yourEmail"
-                                    name="email"
-                                    required
-                                    onChange={onChangeEmail}
-                                    value={email}
-                                  />
-                                  <div className="invalid-feedback">
-                                    Please enter a valid Email adddress!
-                                  </div>
+                                    <input
+                                      type="email"
+                                      className="form-control"
+                                      id="yourEmail"
+                                      name="email"
+                                      required
+                                      onChange={onChangeEmail}
+                                      value={email}
+                                    />
+                                    <div className="invalid-feedback">
+                                      Please enter a valid Email adddress!
+                                    </div>
                                   </div>
                                 </div>
 
@@ -136,18 +158,18 @@ function Signup ({ setToken }) {
                                     Username
                                   </label>
 
-                                    <input
-                                      type="text"
-                                      name="name"
-                                      className="form-control"
-                                      id="yourUsername"
-                                      required
-                                      onChange={onChangeName}
-                                      value={name}
-                                    />
-                                    <div className="invalid-feedback">
-                                      Please choose a name.
-                                    </div>
+                                  <input
+                                    type="text"
+                                    name="name"
+                                    className="form-control"
+                                    id="yourUsername"
+                                    required
+                                    onChange={onChangeName}
+                                    value={name}
+                                  />
+                                  <div className="invalid-feedback">
+                                    Please choose a name.
+                                  </div>
                                 </div>
 
                                 <div className="col-12">
@@ -194,35 +216,33 @@ function Signup ({ setToken }) {
                                   </div>
                                 </div>
                                 <div className="col-12">
-                                  <button
+                                  {/* <button
                                     className="btn btn-primary w-100"
                                     type="submit"
                                   >
                                     Create Account
+                                  </button> */}
+                                  <button
+                                    className="btn btn-primary btn-block"
+                                    disabled={loading}
+                                  >
+                                    {loading && (
+                                      <span className="spinner-border spinner-border-sm"></span>
+                                    )}
+                                    <span>Sign Up</span>
                                   </button>
                                 </div>
                                 <div className="col-12">
                                   <p className="small mb-0">
                                     Already have an account?{" "}
-                                    <a href="/signin">Log in</a>
+                                    <a href="/signin">Sign In</a>
                                   </p>
                                 </div>
                               </div>
                             )}
 
-                            {message && (
-                              <div className="form-group">
-                                <div
-                                  className={
-                                    successful
-                                      ? "alert alert-success"
-                                      : "alert alert-danger"
-                                  }
-                                  role="alert"
-                                >
-                                  {message}
-                                </div>
-                              </div>
+                            {error && (
+                              <p className='alert alert-danger'>Opps! There was a problem. Please try again.</p>
                             )}
                           </Form>
                         </div>

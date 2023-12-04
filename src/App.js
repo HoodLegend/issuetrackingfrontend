@@ -4,46 +4,37 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Signup from "./components/Signup";
 import Dashboard from './components/Dashboard';
 import AddIssue from './components/AddIssue'
-import useToken from "./components/useToken";
 import { Navigate } from "react-router-dom";
 import PrivateRoute from "./misc/PrivateRoute";
+import useToken from "./hooks/useToken";
 
 
 
 function App() {
 
-  const {token, setToken} = useToken();
+ const {setToken} = useToken();
 
-  // if (!token){
-  //   return <Login setToken={setToken}/>
-  
-  // }
-
- 
   return (
-<BrowserRouter>
-      
-        <div className="App">
-          
-          <Routes>
-            {/* public routes */}
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          {/* public routes */}
           <Route path="/" exact element={<NavigationMenu />} />
-            <Route path="/signin" element={<Login setToken={setToken} />} />
-            <Route path="/signup" element={<Signup setToken={setToken}/>} />
+          <Route path="/signin" element={<Login setToken={setToken} />} />
+          <Route path="/signup" element={<Signup setToken={setToken} />} />
 
-            {/* protected Routes */}
-            <Route path="/dashboard" 
+          {/* protected Routes */}
+          <Route
+            path="/dashboard"
             element={
-              <PrivateRoute component={Dashboard}><Dashboard /></PrivateRoute>
-            } 
-              />
-            
-
-
-          </Routes>
-        </div>
-        </BrowserRouter>
-      
+              <PrivateRoute component={Dashboard}>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

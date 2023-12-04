@@ -1,4 +1,3 @@
-import logo from '../assets/images/logo.jpeg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'quill/dist/quill.snow.css';
@@ -9,8 +8,8 @@ import '../css/style.css';
 import { useState} from 'react'; 
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
-import { Navigate } from 'react-router-dom';
-import useToken from './useToken';
+import { useNavigate } from 'react-router-dom';
+
 
 function Login ({ setToken }) {
 
@@ -18,6 +17,7 @@ function Login ({ setToken }) {
     const [password, setPassword] = useState("");
     const [error, setIsError] = useState(false)
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
 
     async function LoginUser (credentials) {
@@ -28,13 +28,18 @@ function Login ({ setToken }) {
         },
         body: JSON.stringify(credentials)
       })
-        .then(data => data.json())
+        .then(data => 
+          data.json()
+        ) 
+      
      }
      
      const handleLogin = async e => {
       e.preventDefault();
 
       setLoading(true);
+      setEmail("")
+      setPassword("")
 
 
       const token = await LoginUser({
@@ -44,12 +49,14 @@ function Login ({ setToken }) {
 
       setLoading(false);
 
-      if(token){
-        setToken(token);
-        return <Navigate to="/dashboard" replace />
-      }else {
-        console.error("Login failed!!")
-      }
+        if(token){
+          setToken(token);
+          return navigate("/dashboard")
+        }else {
+          setIsError(true);
+          console.error("Login failed!!")
+        }
+
      }
 
     
@@ -78,8 +85,7 @@ function Login ({ setToken }) {
                         href="/"
                         className="logo d-flex align-items-center w-auto"
                       >
-                        <img src={logo} alt="company-logo" />
-                        <h4>Turing Foods</h4>
+                        <span className="d-none d-lg-block">Turing Foods</span>
                       </a>
                     </div>
                     {/* End Logo */}
@@ -96,7 +102,6 @@ function Login ({ setToken }) {
                           className="row g-3 needs-validation"
                           noValidate
                           onSubmit={handleLogin}
-                        
                         >
                           <div className="col-12">
                             <label className="form-label">Email</label>
