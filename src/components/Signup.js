@@ -216,12 +216,6 @@ function Signup ({ setToken }) {
                                   </div>
                                 </div>
                                 <div className="col-12">
-                                  {/* <button
-                                    className="btn btn-primary w-100"
-                                    type="submit"
-                                  >
-                                    Create Account
-                                  </button> */}
                                   <button
                                     className="btn btn-primary btn-block"
                                     disabled={loading}

@@ -32,6 +32,14 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/add-issue"
+            element={
+              <PrivateRoute component={AddIssue}>
+                <AddIssue />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

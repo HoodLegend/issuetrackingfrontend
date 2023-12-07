@@ -1,4 +1,4 @@
-import { Form, Button} from 'react-bootstrap';
+import { Form} from 'react-bootstrap';
 import '../css/addissueform.css';
 import { useState } from 'react';
 
@@ -29,7 +29,7 @@ const handleSubmit = (event) => {
 }
 
     return (
-      <div className='upload-form'>
+      <div className="upload-form">
         <h4
           style={{
             margin: "45px",
@@ -42,26 +42,32 @@ const handleSubmit = (event) => {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="Issue">
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" 
-              placeholder="Enter Issue" 
-              required 
-              value={name}
-              onChange={(e) => setName(e.target.value)} />
+              <Form.Control
+                type="text"
+                placeholder="Enter Issue"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="description">
               <Form.Label>Description</Form.Label>
-              <Form.Control type="text" 
-              placeholder="Enter Description" 
-              required 
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}/>
+              <Form.Control
+                type="text"
+                placeholder="Enter Description"
+                required
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Select Priority..</Form.Label>
-              <Form.Select value={priority}
-              onChange={(e) => setPriority(e.target.value)}>
+              <Form.Select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+              >
                 <option value={"URGENT"}>URGENT</option>
                 <option value={"LESS-URGENT"}>LESS-URGENT</option>
               </Form.Select>
@@ -69,22 +75,39 @@ const handleSubmit = (event) => {
 
             <Form.Group className="mb-3" controlId="department">
               <Form.Label>Department</Form.Label>
-              <Form.Control type="text" 
-              placeholder="Enter Department" 
-              required 
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}/>
+              <Form.Control
+                type="text"
+                placeholder="Enter Department"
+                required
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+              />
             </Form.Group>
 
-            { !isPending && <Button variant="success" type="submit">
-              Upload
-            </Button>}
+            {/* <div className="col-12">
+              <button
+                className="btn btn-success btn-block"
+                disabled={isPending}
+              >
+                {isPending && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
+                <span>Upload</span>
+              </button>
+            </div> */}
 
-        
-            { isPending && <Button variant="success" type="submit" disabled>
-              Upload
-            </Button>}
+            {!isPending && (
+              <button className="btn btn-success" type="submit">
+                Upload
+              </button>
+            )}
 
+            {isPending && (
+              <button className='btn btn-success' type="submit" disabled>
+                <span className="spinner-border spinner-border-sm"></span>
+                Upload
+              </button>
+            )}
           </Form>
         </div>
       </div>

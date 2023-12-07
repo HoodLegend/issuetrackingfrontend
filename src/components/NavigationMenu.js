@@ -2,6 +2,7 @@ import "../css/navbar.css";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import logo from "../assets/images/logo.jpeg";
 import about from "../assets/images/about.jpeg";
+import AddIssue from "./AddIssue";
 
 const NavigationMenu = () => {
   return (
@@ -54,10 +55,13 @@ const NavigationMenu = () => {
             <div className="col img-col">
               <img src={about} className="img-fluid" alt="about" />
             </div>
+            
           </div>
         </div>
       </section>
     </div>
+
+    
   );
 };
 

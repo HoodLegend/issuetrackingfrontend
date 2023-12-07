@@ -479,9 +479,9 @@ const Dashboard = () => {
                 </a>
               </li>
               <li>
-                <a href="forms-validation.html">
+                <a href="/add-issue">
                   <i className="bi bi-circle"></i>
-                  <span>Form Validation</span>
+                  <span>Add issue</span>
                 </a>
               </li>
             </ul>
