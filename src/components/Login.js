@@ -28,18 +28,22 @@ function Login ({ setToken }) {
         },
         body: JSON.stringify(credentials)
       })
-        .then(data => 
-          data.json()
-        ) 
+        .then(data => {
+            if(!data.ok){
+               throw new Error("Connection Error! Please try again!")
+            }
+          return data.json()
+          })
       
      }
      
      const handleLogin = async e => {
       e.preventDefault();
 
-      setLoading(true);
+      
       setEmail("")
       setPassword("")
+      setLoading(true);
 
 
       const token = await LoginUser({
@@ -47,20 +51,20 @@ function Login ({ setToken }) {
         password
       });
 
-      setLoading(false);
-
+      
+        // check if the token is vaid  then set token and login the user
         if(token){
           setToken(token);
+          
           return navigate("/dashboard")
         }else {
           setIsError(true);
+          setLoading(false);
           console.error("Login failed!!")
         }
 
      }
 
-    
-  
     const onChangeEmail = (e) => {
       const email = e.target.value;
       setEmail(email);

@@ -14,7 +14,7 @@ import { Main } from "../assets/js/main.js";
 import profile from "../assets/images/user-avatar.png";
 import { Outlet } from "react-router-dom";
 
-const Dashboard = () => {
+function Dashboard () {
   
 
   useEffect(() => {
@@ -26,6 +26,10 @@ const Dashboard = () => {
     // };
   });
 
+  const logout = () => {
+    localStorage.removeItem('token');
+  }
+
   return (
     <div>
       {/* ======= Header ======= */}
@@ -35,7 +39,6 @@ const Dashboard = () => {
       >
         <div className="d-flex align-items-center justify-content-between">
           <a href="index.html" className="logo d-flex align-items-center">
-            <img src="assets/img/logo.png" alt="" />
             <span className="d-none d-lg-block">Dashboard</span>
           </a>
           <i className="bi bi-list toggle-sidebar-btn"></i>
@@ -313,10 +316,10 @@ const Dashboard = () => {
                 <li>
                   <a
                     className="dropdown-item d-flex align-items-center"
-                    href="/"
+                    href="/" onClick={logout}
                   >
                     <i className="bi bi-box-arrow-right"></i>
-                    <span >Sign Out</span>
+                    <span>Sign Out</span>
                   </a>
                 </li>
               </ul>

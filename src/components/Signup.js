@@ -43,7 +43,7 @@ function Signup ({ setToken }) {
       })
         .then(data =>{
             if(!data.ok){
-              throw new Error("could not fetch the data from API!")
+              throw new Error("Connection Error! Please try again.")
             }
             return data.json();
         })

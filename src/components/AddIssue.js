@@ -10,10 +10,14 @@ const [department, setDepartment] = useState('');
 const [isPending, setIsPending] = useState(false);
 
 
-const handleSubmit = (event) => {
+const handleIssueSubmission = (event) => {
     event.preventDefault();
 
     setIsPending(true);
+    setName("")
+    setDepartment("")
+    setDescription("")
+    setPriority("")
 
     const issue = {name, description, priority, department};
 
@@ -39,7 +43,7 @@ const handleSubmit = (event) => {
           Upload Issue
         </h4>
         <div className="container-fluid d-flex justify-content-center min-vh-70 align-items-center">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleIssueSubmission}>
             <Form.Group className="mb-3" controlId="Issue">
               <Form.Label>Name</Form.Label>
               <Form.Control
