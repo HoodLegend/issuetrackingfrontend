@@ -20,7 +20,7 @@ function Login ({ setToken }) {
     const navigate = useNavigate();
 
 
-    async function LoginUser (credentials) {
+    const LoginUser = async (credentials) => {
       return fetch('http://localhost:8080/api/auth/signin', {
         method: 'POST',
         headers: {

@@ -4,7 +4,6 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Signup from "./components/Signup";
 import Dashboard from './components/Dashboard';
 import AddIssue from './components/AddIssue'
-import { Navigate } from "react-router-dom";
 import PrivateRoute from "./misc/PrivateRoute";
 import useToken from "./hooks/useToken";
 
