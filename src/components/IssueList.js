@@ -20,7 +20,7 @@ const NewIssues = ({issues}) => {
                   <th scope="row">
                     <p>{issue.id}</p>
                   </th>
-                  <td>{issue.name}</td>
+                  <td>{issue.issuename}</td>
                   <td>{issue.description}</td>
                   <td>{issue.department}</td>
                   <td>{issue.priority}</td>

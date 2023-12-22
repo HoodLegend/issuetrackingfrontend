@@ -21,7 +21,7 @@ function Login ({ setToken }) {
 
 
     const LoginUser = async (credentials) => {
-      return fetch('http://localhost:8080/api/auth/signin', {
+      return fetch('http://localhost:8080/api/v1/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

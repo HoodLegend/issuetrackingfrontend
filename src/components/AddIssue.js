@@ -1,36 +1,43 @@
 import { Form} from 'react-bootstrap';
 import '../css/addissueform.css';
 import { useState } from 'react';
+import { useNavigate} from 'react-router-dom'
+
 
 const AddIssue = () => {
-const [name, setName] = useState('');
+const [issuename, setIssueName] = useState('');
 const [description, setDescription] = useState('');
 const [priority, setPriority] = useState('URGENT');
 const [department, setDepartment] = useState('');
 const [isPending, setIsPending] = useState(false);
+const navigate = useNavigate();
 
 
 const handleIssueSubmission = (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    setIsPending(true);
-    setName("")
-    setDepartment("")
-    setDescription("")
-    setPriority("")
+  setIsPending(true);
+  setIssueName("");
+  setDepartment("");
+  setDescription("");
+  setPriority("");
 
-    const issue = {name, description, priority, department};
+  const issue = { issuename, description, priority, department };
 
-    fetch('http://localhost:8080/save-fault' , {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(issue)
+  setTimeout(() => {
+    fetch("http://localhost:8080/api/v1/save-fault", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(issue),
     }).then(() => {
-        setIsPending(false);
-    })
-}
+      setIsPending(false);
+      navigate("/dashboard");
+    });
+  }, 1000);
+};
+
 
     return (
       <div className="upload-form">
@@ -50,8 +57,8 @@ const handleIssueSubmission = (event) => {
                 type="text"
                 placeholder="Enter Issue"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={issuename}
+                onChange={(e) => setIssueName(e.target.value)}
               />
             </Form.Group>
 

@@ -23,16 +23,20 @@ function Dashboard () {
     // Initialize the sidebar toggle when the component mounts
     Main();
 
-    // return () => {
-    //   // This is an empty function since we have no specific cleanup tasks
-    // };
-  });
+    return () => {
+
+    }; 
+  }, []);
 
   useEffect(() => {
-    fetch('http://localhost:8080/issues')
+    fetch('http://localhost:8080/api/v1/issues')
     .then(res => {
       return res.json();
     }).then(data => {
+      if (!data.ok){
+        console.error("there was na error", Error);
+      }
+
       setIssues(data)
       
     })
@@ -606,7 +610,7 @@ function Dashboard () {
                 </div>
                 {/* End Customers Card */}
 
-                {/* Recent Sales */}
+                {/* Recent Issues */}
                 <div className="col-12">
                   <div className="card recent-sales overflow-auto">
                     <div className="filter">
@@ -640,7 +644,7 @@ function Dashboard () {
                       <h5 className="card-title">
                         Recent Issues <span> | Today</span>
                       </h5>
-                      {issues ? <IssueList issues={issues} /> :  <p className="alert alert-danger text-center">No Entries found</p>}
+                      {issues && (<IssueList issues={issues} />) }
                     </div>
                   </div>
                 </div>

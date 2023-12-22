@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Form from "react-validation/build/form";
 import  PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import useToken from '../hooks/useToken';
 
 function Signup ({ setToken }) {  
     
@@ -34,7 +33,7 @@ function Signup ({ setToken }) {
 
     // function to call the api that handles the signing up of a user.
     async function RegisterUser (credentials) {
-      return fetch('http://localhost:8080/api/auth/signup', {
+      return fetch('http://localhost:8080/api/v1/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
